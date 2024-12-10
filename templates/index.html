@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Flow Data</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .section {
+            width: 45%;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daily Flow Data</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Response Label</h2>
+            <pre id="response_label"></pre>
+        </div>
+        <div class="section">
+            <h2>Checkres</h2>
+            <pre id="checkres"></pre>
+        </div>
+    </div>
+
+    <script>
+        async function fetchData() {
+            const response = await fetch('/data');
+            const data = await response.json();
+            console.log(data);
+            document.getElementById('response_label').textContent = JSON.stringify(data.response_label, null, 2);
+            document.getElementById('checkres').textContent = JSON.stringify(data.checkres.slice(-30), null, 2);
+        }
+
+        fetchData();
+        setInterval(fetchData, 20000); // Refresh data every 20 seconds
+    </script>
+</body>
+</html>
