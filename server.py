@@ -10,7 +10,7 @@ import os
 app = Flask(__name__)
 
 # Tải mô hình đã lưu
-model = tf.keras.models.load_model('best_model.keras')
+model = tf.keras.models.load_model('best_model2.keras')
 
 # Đọc dữ liệu từ file CICFlowMeter
 
@@ -40,7 +40,7 @@ def read_daily_flow_data():
         raise FileNotFoundError(f"File {file_path} does not exist")
 
     # Read the last 500 lines of the file
-    data = pd.read_csv(file_path).tail(30)
+    data = pd.read_csv(file_path).tail(140)
 
     return data
 
@@ -201,7 +201,7 @@ def predict_attack(test_X_clean):
     test_predictions = model.predict(test_X_clean)
     if test_predictions.shape[1] > 1:
         # Assuming binary classification, select the first output
-        test_predictions = test_predictions[:, 0]
+        test_predictions = np.argmax(test_predictions, axis=1)
 
     # Convert probabilities to binary predictions
     test_predictions = (test_predictions > 0.5).astype(int).flatten()
@@ -269,4 +269,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
